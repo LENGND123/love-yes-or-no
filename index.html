@@ -21,11 +21,12 @@
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
-  html, body { margin: 0; height: 100%; }
+  html, body { margin: 0; }
   body {
     min-height: 100%;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     color: var(--ink);
     font-family: "Segoe UI", sans-serif;
     background:
@@ -112,7 +113,9 @@
     width: 100%;
     height: auto;
   }
+  .frame.wide { width: 100%; }
   .frame.small { width: 168px; margin-top: 0; }
+  .photos { width: 100%; }
   .line {
     margin: 12px auto 0;
     max-width: 22ch;
@@ -229,9 +232,17 @@
     <div id="burst"></div>
     <section class="screen" id="seal">
       <p class="eyebrow" id="for"></p>
-      <figure class="frame">
-        <img src="photo.jpg" alt="The two of us" width="710" height="820">
-      </figure>
+      <div class="photos">
+        <figure class="frame">
+          <img src="photo-1.jpg" alt="The two of us" width="710" height="820">
+        </figure>
+        <figure class="frame wide">
+          <img src="photo-2.jpg" alt="The two of us by the courtyard" width="960" height="540">
+        </figure>
+        <figure class="frame wide">
+          <img src="photo-3.jpg" alt="The two of us under the tree" width="960" height="540">
+        </figure>
+      </div>
       <p class="line" id="line"></p>
       <button class="open" id="open" type="button">
         <span class="open-label">Open</span>
@@ -248,7 +259,7 @@
     </section>
     <section class="screen" id="done" hidden>
       <figure class="frame small">
-        <img src="photo.jpg" alt="" width="710" height="820">
+        <img src="photo-1.jpg" alt="" width="710" height="820">
       </figure>
       <p class="from" id="from-line"></p>
       <h1>Yes.</h1>
