@@ -98,63 +98,30 @@
     font-size: 18px;
   }
   .screen { position: relative; z-index: 1; }
-  .envelope {
+  .frame {
+    width: min(100%, 300px);
+    margin: 14px auto 6px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: 0 14px 30px rgba(90, 30, 45, .16);
+    line-height: 0;
+  }
+  .frame img {
     display: block;
-    width: 196px;
-    height: 132px;
-    margin: 26px auto 6px;
-    position: relative;
-    perspective: 700px;
+    width: 100%;
+    height: auto;
   }
-  .pocket, .flap {
-    position: absolute;
-    left: 0;
-    right: 0;
-  }
-  .pocket {
-    top: 36px;
-    bottom: 0;
-    background: #fff5f4;
-    border: 1px solid #e7c4c8;
-    border-radius: 4px 4px 14px 14px;
-    box-shadow: 0 12px 24px rgba(90, 30, 45, .08);
-  }
-  .pocket::before, .pocket::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    width: 50%;
-    height: 72%;
-    background: linear-gradient(#fff, #fdecef);
-  }
-  .pocket::before { left: 0; clip-path: polygon(0 0, 100% 100%, 0 100%); }
-  .pocket::after { right: 0; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
-  .flap {
-    top: 0;
-    height: 86px;
-    background: linear-gradient(#fffdfb, #f4c2cc);
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    transform-origin: top center;
-    transition: transform .32s ease;
-    z-index: 2;
-    filter: drop-shadow(0 1px 0 #e7c4c8);
-  }
-  .envelope.is-open .flap { transform: rotateX(188deg); }
-  .wax {
-    position: absolute;
-    left: 50%;
-    top: 58px;
-    z-index: 3;
-    width: 42px;
-    height: 42px;
-    margin-left: -21px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: radial-gradient(circle at 35% 35%, #d85a73, #9d2744 62%);
-    color: #fff;
-    font-size: 18px;
-    box-shadow: 0 4px 0 #7a2036;
+  .frame.small { width: 168px; margin-top: 0; }
+  .line {
+    margin: 12px auto 0;
+    max-width: 22ch;
+    text-align: center;
+    font-family: Palatino, "Palatino Linotype", Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.35;
+    color: var(--ink);
   }
   button {
     font: inherit;
@@ -169,6 +136,7 @@
   .open {
     display: block;
     width: 100%;
+    margin-top: 16px;
     background: transparent;
     color: var(--rose);
     padding: 0;
@@ -214,24 +182,14 @@
   }
   .taunt { min-height: 1.4em; margin-top: 4px; }
   #seal, #done {
-    min-height: 408px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
   }
-  #done { text-align: center; }
   #done h1 { margin-top: 8px; }
   .from { color: var(--rose); font-size: 20px; }
-  .letter {
-    margin: 18px auto 0;
-    max-width: 32ch;
-    text-align: left;
-    line-height: 1.45;
-    font-family: Palatino, Georgia, serif;
-    font-size: 18px;
-  }
   .again {
     display: inline-block;
     margin-top: 22px;
@@ -261,7 +219,7 @@
     to { transform: translate(var(--x), var(--y)); opacity: 0; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .float i, .spark, .flap, .no { animation: none; transition: none; }
+    .float i, .spark, .no { animation: none; transition: none; }
   }
 </style>
 </head>
@@ -271,15 +229,13 @@
     <div id="burst"></div>
     <section class="screen" id="seal">
       <p class="eyebrow" id="for"></p>
+      <figure class="frame">
+        <img src="photo.jpg" alt="The two of us" width="710" height="820">
+      </figure>
+      <p class="line" id="line"></p>
       <button class="open" id="open" type="button">
-        <span class="envelope" id="env" aria-hidden="true">
-          <span class="flap"></span>
-          <span class="pocket"></span>
-          <span class="wax">♥</span>
-        </span>
         <span class="open-label">Open</span>
       </button>
-      <span class="script">open when you are ready.</span>
     </section>
     <section class="screen" id="ask" hidden>
       <p class="eyebrow" id="ask-for"></p>
@@ -291,10 +247,12 @@
       <span class="taunt" id="taunt" aria-live="polite">one of them keeps moving.</span>
     </section>
     <section class="screen" id="done" hidden>
+      <figure class="frame small">
+        <img src="photo.jpg" alt="" width="710" height="820">
+      </figure>
       <p class="from" id="from-line"></p>
       <h1>Yes.</h1>
-      <span class="script">i love you too.</span>
-      <p class="letter" id="letter"></p>
+      <p class="line" id="letter"></p>
       <button class="again" id="again" type="button">once more</button>
     </section>
   </main>
@@ -302,9 +260,9 @@
 const params = new URLSearchParams(location.search);
 const GIFT = {
   to: params.get("to") || "you",
-  from: params.get("from") || "me",
+  from: params.get("from") || "Aditya",
   question: params.get("q") || "Do you love me?",
-  letter: params.get("letter") || "You found the button that stays. I love you. That is the whole note."
+  letter: params.get("letter") || "You smiled, and the whole afternoon agreed."
 };
 
 const LINES = [
@@ -319,6 +277,7 @@ const forLine = GIFT.to === "you" ? "a note for you" : "for " + GIFT.to;
 document.getElementById("for").textContent = forLine;
 document.getElementById("ask-for").textContent = forLine;
 document.getElementById("question").textContent = GIFT.question;
+document.getElementById("line").textContent = GIFT.letter;
 document.getElementById("letter").textContent = GIFT.letter;
 document.getElementById("from-line").textContent = "from " + GIFT.from;
 if (GIFT.to !== "you") document.title = "For " + GIFT.to;
@@ -326,7 +285,6 @@ if (GIFT.to !== "you") document.title = "For " + GIFT.to;
 const seal = document.getElementById("seal");
 const ask = document.getElementById("ask");
 const done = document.getElementById("done");
-const env = document.getElementById("env");
 const no = document.getElementById("no");
 const arena = document.getElementById("arena");
 const taunt = document.getElementById("taunt");
@@ -397,11 +355,7 @@ function celebrate() {
   }
 }
 
-document.getElementById("open").addEventListener("click", () => {
-  env.classList.add("is-open");
-  const wait = reduce ? 0 : 280;
-  setTimeout(() => show(ask), wait);
-});
+document.getElementById("open").addEventListener("click", () => show(ask));
 
 no.addEventListener("pointerenter", dodge);
 no.addEventListener("pointerdown", dodge);
@@ -415,7 +369,6 @@ document.getElementById("yes").addEventListener("click", () => {
 document.getElementById("again").addEventListener("click", () => {
   dodges = 0;
   taunt.textContent = "one of them keeps moving.";
-  env.classList.remove("is-open");
   burst.replaceChildren();
   show(seal);
 });
